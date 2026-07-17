@@ -1,4 +1,4 @@
-name: invoiso
+name: ebill
 description: "Invoice generating desktop app built with Flutter"
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 4.3.0
@@ -76,9 +76,16 @@ flutter:
    - assets/fonts/NotoSansTelugu-Bold.ttf
 
 flutter_launcher_icons:
+  image_path: "assets/images/celltek_logo.png"
+  windows:
+    generate: true
+    icon_size: 256
   macos:
     generate: true
-    image_path: "assets/images/logo_v.png"
+  web:
+    generate: true
+    background_color: "#FFFFFF"
+    theme_color: "#002E78"
 
 package_rename_config:
   linux:

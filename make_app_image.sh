@@ -32,17 +32,17 @@ echo "📂 Preparing AppDir..."
 rm -rf AppDir
 mkdir -p AppDir/usr/bin
 cp -r build/linux/x64/release/bundle/* AppDir/
-cp build/linux/x64/release/bundle/invoiso AppDir/invoiso
+cp build/linux/x64/release/bundle/ebill AppDir/ebill
 
 # Copy icon
 mkdir -p AppDir/usr/share/icons/hicolor/256x256/apps
 cp assets/deb/images/logo.png AppDir/usr/share/icons/hicolor/256x256/apps/logo.png
 
 # Copy .desktop file (ensure it exists)
-#if [[ -f assets/deb/com.invoiso.desktop ]]; then
-#  cp assets/deb/com.invoiso.desktop AppDir/com.invoiso.desktop.desktop
+#if [[ -f assets/deb/com.ebill.desktop ]]; then
+#  cp assets/deb/com.ebill.desktop AppDir/com.ebill.desktop.desktop
 #else
-#  echo "⚠️ Warning: com.invoiso.desktop not found, skipping..."
+#  echo "⚠️ Warning: com.ebill.desktop not found, skipping..."
 #fi
 
 # ====== Install AppImage Builder ======

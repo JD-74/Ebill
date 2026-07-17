@@ -1,4 +1,4 @@
-import 'package:invoiso/models/product.dart';
+import 'package:ebill/models/product.dart';
 import 'package:sqflite/sqflite.dart';
 import 'database_helper.dart';
 
@@ -85,11 +85,11 @@ class ProductService {
       final result = await db.query(
         'products',
         where: typeFilter != null
-            ? '(LOWER(name) LIKE ? OR LOWER(hsncode) LIKE ?) AND type = ?'
-            : 'LOWER(name) LIKE ? OR LOWER(hsncode) LIKE ?',
+            ? '(LOWER(name) LIKE ? OR LOWER(hsncode) LIKE ? OR LOWER(colour) LIKE ?) AND type = ?'
+            : 'LOWER(name) LIKE ? OR LOWER(hsncode) LIKE ? OR LOWER(colour) LIKE ?',
         whereArgs: typeFilter != null
-            ? ['%$queryLOwer%', '%$queryLOwer%', typeFilter]
-            : ['%$queryLOwer%', '%$queryLOwer%'],
+            ? ['%$queryLOwer%', '%$queryLOwer%', '%$queryLOwer%', typeFilter]
+            : ['%$queryLOwer%', '%$queryLOwer%', '%$queryLOwer%'],
       );
       return result.map((e) => Product.fromMap(e)).toList();
     }
@@ -111,11 +111,11 @@ class ProductService {
     List<dynamic>? whereArgs;
     final queryLOwer = query.toLowerCase();
     if (query.isNotEmpty && typeFilter != null) {
-      where = '(LOWER(name) LIKE ? OR LOWER(description) LIKE ? OR LOWER(hsncode) LIKE ?) AND type = ?';
-      whereArgs = ['%$queryLOwer%', '%$queryLOwer%', '%$queryLOwer%', typeFilter];
+      where = '(LOWER(name) LIKE ? OR LOWER(description) LIKE ? OR LOWER(hsncode) LIKE ? OR LOWER(colour) LIKE ?) AND type = ?';
+      whereArgs = ['%$queryLOwer%', '%$queryLOwer%', '%$queryLOwer%', '%$queryLOwer%', typeFilter];
     } else if (query.isNotEmpty) {
-      where = 'LOWER(name) LIKE ? OR LOWER(description) LIKE ? OR LOWER(hsncode) LIKE ?';
-      whereArgs = ['%$queryLOwer%', '%$queryLOwer%', '%$queryLOwer%'];
+      where = 'LOWER(name) LIKE ? OR LOWER(description) LIKE ? OR LOWER(hsncode) LIKE ? OR LOWER(colour) LIKE ?';
+      whereArgs = ['%$queryLOwer%', '%$queryLOwer%', '%$queryLOwer%', '%$queryLOwer%'];
     } else if (typeFilter != null) {
       where = 'type = ?';
       whereArgs = [typeFilter];
@@ -139,13 +139,13 @@ class ProductService {
     final queryLOwer = query.toLowerCase();
     if (query.isNotEmpty && typeFilter != null) {
       return Sqflite.firstIntValue(await db.rawQuery(
-        "SELECT COUNT(*) FROM products WHERE (LOWER(name) LIKE ? OR LOWER(description) LIKE ? OR LOWER(hsncode) LIKE ?) AND type = ?",
-        ['%$queryLOwer%', '%$queryLOwer%', '%$queryLOwer%', typeFilter],
+        "SELECT COUNT(*) FROM products WHERE (LOWER(name) LIKE ? OR LOWER(description) LIKE ? OR LOWER(hsncode) LIKE ? OR LOWER(colour) LIKE ?) AND type = ?",
+        ['%$queryLOwer%', '%$queryLOwer%', '%$queryLOwer%', '%$queryLOwer%', typeFilter],
       ))!;
     } else if (query.isNotEmpty) {
       return Sqflite.firstIntValue(await db.rawQuery(
-        "SELECT COUNT(*) FROM products WHERE LOWER(name) LIKE ? OR LOWER(description) LIKE ? OR LOWER(hsncode) LIKE ?",
-        ['%$queryLOwer%', '%$queryLOwer%', '%$queryLOwer%'],
+        "SELECT COUNT(*) FROM products WHERE LOWER(name) LIKE ? OR LOWER(description) LIKE ? OR LOWER(hsncode) LIKE ? OR LOWER(colour) LIKE ?",
+        ['%$queryLOwer%', '%$queryLOwer%', '%$queryLOwer%', '%$queryLOwer%'],
       ))!;
     } else if (typeFilter != null) {
       return Sqflite.firstIntValue(await db.rawQuery(

@@ -4,9 +4,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:invoiso/constants.dart';
-import 'package:invoiso/invoiso_colors.dart';
-import 'package:invoiso/providers/repositories.dart';
+import 'package:ebill/constants.dart';
+import 'package:ebill/ebill_colors.dart';
+import 'package:ebill/providers/repositories.dart';
 import 'package:uuid/uuid.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -48,6 +48,7 @@ class _ProductManagementScreenState extends ConsumerState<ProductManagementScree
 
   // Form controllers
   final _nameController = TextEditingController();
+  final _colourController = TextEditingController();
   final _defaultDiscountController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _priceController = TextEditingController();
@@ -65,6 +66,7 @@ class _ProductManagementScreenState extends ConsumerState<ProductManagementScree
   static const _csvMaxRows = 500;
   static const _csvHeaders = [
     'name',
+    'colour',
     'hsn_code',
     'description',
     'price',
@@ -105,6 +107,7 @@ class _ProductManagementScreenState extends ConsumerState<ProductManagementScree
   @override
   void dispose() {
     _nameController.dispose();
+    _colourController.dispose();
     _descriptionController.dispose();
     _priceController.dispose();
     _purchasePriceController.dispose();
@@ -165,6 +168,7 @@ class _ProductManagementScreenState extends ConsumerState<ProductManagementScree
       final newProduct = Product(
         id: const Uuid().v4(),
         name: _nameController.text.trim(),
+        colour: _colourController.text.trim(),
         description: _descriptionController.text.trim(),
         price: price,
         stock: int.parse(_stockController.text.trim()),
@@ -190,6 +194,7 @@ class _ProductManagementScreenState extends ConsumerState<ProductManagementScree
   void _clearForm() {
     _formKey.currentState?.reset();
     _nameController.clear();
+    _colourController.clear();
     _descriptionController.clear();
     _priceController.clear();
     _purchasePriceController.clear();
@@ -255,6 +260,7 @@ class _ProductManagementScreenState extends ConsumerState<ProductManagementScree
   void _showProductDialog(Product product, bool isEdit) {
     //final isEdit = product != null;
     final nameCtrl = TextEditingController(text: product.name);
+    final colourCtrl = TextEditingController(text: product.colour);
     final descriptionCtrl = TextEditingController(text: product.description);
     final priceCtrl = TextEditingController(text: product.price.toString());
     final purchasePriceCtrl = TextEditingController(
@@ -334,6 +340,10 @@ class _ProductManagementScreenState extends ConsumerState<ProductManagementScree
                         readOnly: !isEdit, maxLength: 100),
                     const SizedBox(height: 16),
                     _buildDialogTextField(
+                        colourCtrl, 'Colour', Icons.palette_outlined,
+                        readOnly: !isEdit, maxLength: 50),
+                    const SizedBox(height: 16),
+                    _buildDialogTextField(
                         hsnCodeCtrl, 'HSN Code', Icons.qr_code,
                         readOnly: !isEdit, maxLength: 100),
                     const SizedBox(height: 16),
@@ -401,6 +411,7 @@ class _ProductManagementScreenState extends ConsumerState<ProductManagementScree
                     final updatedProduct = Product(
                       id: product.id,
                       name: nameCtrl.text.trim(),
+                      colour: colourCtrl.text.trim(),
                       description: descriptionCtrl.text.trim(),
                       price: dialogPrice,
                       stock: int.parse(stockCtrl.text.trim()),
@@ -470,6 +481,7 @@ class _ProductManagementScreenState extends ConsumerState<ProductManagementScree
       validator: (value) {
         if (value == null || value.trim().isEmpty) {
           if (label.contains('Name')) return 'Please enter product name';
+          if (label.contains('Colour')) return null;
           if (label.contains('Price')) return 'Please enter price';
           if (label.contains('Stock')) return 'Please enter stock';
           if (label.contains('Tax')) return 'Please enter tax rate';
@@ -529,7 +541,7 @@ class _ProductManagementScreenState extends ConsumerState<ProductManagementScree
 
   Future<void> _downloadSampleCSV() async {
     const sample =
-        '"name","hsn_code","description","price","tax_rate","stock","type","default_discount","purchase_price"\n'
+        '"name","colour","hsn_code","description","price","tax_rate","stock","type","default_discount","purchase_price"\n'
         '"Wireless Mouse","84716010","Ergonomic wireless mouse","599.00","18","50","product","5.00","400.00"\n'
         '"USB Hub","84734000","4-port USB 3.0 hub","299.00","18","100","product","0","180.00"\n'
         '"Annual Support","998314","Annual technical support plan","4999.00","18","0","service","10.00","0"\n';
@@ -593,6 +605,7 @@ class _ProductManagementScreenState extends ConsumerState<ProductManagementScree
                       ],
                     ),
                     _csvRuleRow('name', 'Yes', 'Product name'),
+                    _csvRuleRow('colour', 'No', 'Colour / variant'),
                     _csvRuleRow('price', 'Yes', 'Unit price (numeric)'),
                     _csvRuleRow('hsn_code', 'No', 'HSN / SAC code'),
                     _csvRuleRow('description', 'No', 'Short description'),
@@ -790,6 +803,7 @@ class _ProductManagementScreenState extends ConsumerState<ProductManagementScree
         final product = Product(
           id: existing?.id ?? const Uuid().v4(),
           name: name,
+          colour: getField(row, 'colour'),
           hsncode: getField(row, 'hsn_code'),
           description: getField(row, 'description'),
           price: price,
@@ -897,7 +911,7 @@ class _ProductManagementScreenState extends ConsumerState<ProductManagementScree
                             dense: true,
                             title: Text(p.name),
                             subtitle: Text(
-                                '$_currencySymbol${p.price.toStringAsFixed(2)} · HSN: ${p.hsncode.isEmpty ? '—' : p.hsncode}'),
+                                '${p.colour.isNotEmpty ? '${p.colour} · ' : ''}$_currencySymbol${p.price.toStringAsFixed(2)} · HSN: ${p.hsncode.isEmpty ? '—' : p.hsncode}'),
                             trailing: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
@@ -1035,9 +1049,10 @@ class _ProductManagementScreenState extends ConsumerState<ProductManagementScree
     try {
       final allProducts = await ref.read(productRepositoryProvider).getAllProducts();
       final List<List<dynamic>> rows = [
-        ['name', 'hsn_code', 'description', 'price', 'tax_rate', 'stock', 'type', 'default_discount', 'purchase_price'],
+        ['name', 'colour', 'hsn_code', 'description', 'price', 'tax_rate', 'stock', 'type', 'default_discount', 'purchase_price'],
         ...allProducts.map((p) => [
               p.name,
+              p.colour,
               p.hsncode,
               p.description,
               p.price,
@@ -1114,7 +1129,7 @@ class _ProductManagementScreenState extends ConsumerState<ProductManagementScree
             mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
             children: [
               pw.Text(
-                'Generated by Ebill',
+                'Powered by BRAND HUB',
                 style: const pw.TextStyle(fontSize: 9, color: PdfColors.grey600),
               ),
               pw.Text(
@@ -1127,10 +1142,11 @@ class _ProductManagementScreenState extends ConsumerState<ProductManagementScree
             pw.TableHelper.fromTextArray(
               context: context,
               data: [
-                ['#', 'Name', 'HSN Code', 'Description', 'Price', 'Tax Rate', 'Stock', 'Type', 'Discount'],
+                ['#', 'Name', 'Colour', 'HSN Code', 'Description', 'Price', 'Tax Rate', 'Stock', 'Type', 'Discount'],
                 ...productsToExport.indexed.map(((int, dynamic) e) => [
                       e.$1 + 1,
                       e.$2.name,
+                      e.$2.colour,
                       e.$2.hsncode,
                       e.$2.description,
                       e.$2.price.toStringAsFixed(2),
@@ -1291,6 +1307,10 @@ class _ProductManagementScreenState extends ConsumerState<ProductManagementScree
                   ],
                   _buildFormField(_nameController, 'Name', Icons.inventory_2,
                       maxLength: 100),
+                  const SizedBox(height: 16),
+                  _buildFormField(
+                      _colourController, 'Colour', Icons.palette_outlined,
+                      maxLength: 50, required: false),
                   const SizedBox(height: 16),
                   _buildFormField(_hsnCodeController, 'HSN Code', Icons.qr_code,
                       maxLength: 100, required: false),
@@ -1665,6 +1685,9 @@ class _ProductManagementScreenState extends ConsumerState<ProductManagementScree
                 Text('Sl. No', style: TextStyle(fontWeight: FontWeight.bold))),
         const DataColumn(
             label: Text('Name', style: TextStyle(fontWeight: FontWeight.bold))),
+        const DataColumn(
+            label:
+                Text('Colour', style: TextStyle(fontWeight: FontWeight.bold))),
         if (_businessType == BusinessType.both)
           const DataColumn(
               label:Text('Type', style: TextStyle(fontWeight: FontWeight.bold))),
@@ -1706,6 +1729,7 @@ class _ProductManagementScreenState extends ConsumerState<ProductManagementScree
                 p.name.length > 30 ? '${p.name.substring(0, 30)}...' : p.name,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(fontWeight: FontWeight.w500))),
+            DataCell(Text(p.colour.isEmpty ? '—' : p.colour)),
             if (_businessType == BusinessType.both)
               DataCell(Tooltip(
                 message: p.type == 'service' ? 'Service' : 'Product',

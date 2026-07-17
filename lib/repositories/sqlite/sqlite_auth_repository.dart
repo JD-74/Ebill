@@ -1,6 +1,6 @@
-import 'package:invoiso/database/user_service.dart';
-import 'package:invoiso/models/user.dart';
-import 'package:invoiso/repositories/auth_repository.dart';
+import 'package:ebill/database/user_service.dart';
+import 'package:ebill/models/user.dart';
+import 'package:ebill/repositories/auth_repository.dart';
 
 
 class SqliteAuthRepository implements AuthRepository {

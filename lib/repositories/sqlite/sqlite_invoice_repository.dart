@@ -1,6 +1,6 @@
-import 'package:invoiso/database/invoice_service.dart';
-import 'package:invoiso/models/invoice.dart';
-import 'package:invoiso/repositories/invoice_repository.dart';
+import 'package:ebill/database/invoice_service.dart';
+import 'package:ebill/models/invoice.dart';
+import 'package:ebill/repositories/invoice_repository.dart';
 
 class SqliteInvoiceRepository implements InvoiceRepository {
   @override

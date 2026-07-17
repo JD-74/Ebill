@@ -1,4 +1,4 @@
-import 'package:invoiso/models/company_info.dart';
+import 'package:ebill/models/company_info.dart';
 
 abstract class CompanyInfoRepository {
   Future<CompanyInfo?> getCompanyInfo();

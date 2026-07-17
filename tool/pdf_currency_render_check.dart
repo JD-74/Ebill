@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:invoiso/common.dart';
-import 'package:invoiso/services/pdf_font_assets.dart';
+import 'package:ebill/common.dart';
+import 'package:ebill/services/pdf_font_assets.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
@@ -10,7 +10,7 @@ import '../test_support/ttf_glyph_coverage.dart';
 
 Future<void> main(List<String> args) async {
   final outputPath =
-      args.isEmpty ? 'output/invoiso_currency_render_check.pdf' : args.first;
+      args.isEmpty ? 'output/ebill_currency_render_check.pdf' : args.first;
 
   final fontBytes = _loadFontBytes();
   final missingRunes = _findMissingCurrencyRunes(fontBytes);
@@ -27,8 +27,8 @@ Future<void> main(List<String> args) async {
   }
 
   final pdf = pw.Document(
-    title: 'Invoiso Currency Font Check',
-    creator: 'Invoiso PDF currency render check',
+    title: 'Ebill Currency Font Check',
+    creator: 'Ebill PDF currency render check',
   );
   final theme = pw.ThemeData.withFont(
     base: pw.Font.ttf(ByteData.sublistView(fontBytes[PdfFontAssets.regular]!)),
@@ -51,7 +51,7 @@ Future<void> main(List<String> args) async {
       margin: const pw.EdgeInsets.all(32),
       build: (context) => [
         pw.Text(
-          'Invoiso Currency Symbol Render Check',
+          'Ebill Currency Symbol Render Check',
           style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold),
         ),
         pw.SizedBox(height: 12),

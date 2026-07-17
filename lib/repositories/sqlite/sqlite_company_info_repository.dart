@@ -1,6 +1,6 @@
-import 'package:invoiso/database/company_info_service.dart';
-import 'package:invoiso/models/company_info.dart';
-import 'package:invoiso/repositories/company_info_repository.dart';
+import 'package:ebill/database/company_info_service.dart';
+import 'package:ebill/models/company_info.dart';
+import 'package:ebill/repositories/company_info_repository.dart';
 
 class SqliteCompanyInfoRepository implements CompanyInfoRepository {
   @override

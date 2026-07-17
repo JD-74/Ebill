@@ -1,13 +1,13 @@
-import 'package:invoiso/database/database_helper.dart';
-import 'package:invoiso/common.dart';
-import 'package:invoiso/domain/customer_identity.dart';
-import 'package:invoiso/domain/invoice_calculator.dart';
-import 'package:invoiso/domain/invoice_totals_calculator.dart';
-import 'package:invoiso/models/additional_cost.dart';
-import 'package:invoiso/utils/app_date.dart';
-import 'package:invoiso/utils/formatters.dart';
-import 'package:invoiso/models/report_models.dart';
-export 'package:invoiso/models/report_models.dart';
+import 'package:ebill/database/database_helper.dart';
+import 'package:ebill/common.dart';
+import 'package:ebill/domain/customer_identity.dart';
+import 'package:ebill/domain/invoice_calculator.dart';
+import 'package:ebill/domain/invoice_totals_calculator.dart';
+import 'package:ebill/models/additional_cost.dart';
+import 'package:ebill/utils/app_date.dart';
+import 'package:ebill/utils/formatters.dart';
+import 'package:ebill/models/report_models.dart';
+export 'package:ebill/models/report_models.dart';
 
 // ─── Internal row ─────────────────────────────────────────────────────────────
 

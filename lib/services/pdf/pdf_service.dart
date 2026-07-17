@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:invoiso/services/backend_services.dart';
+import 'package:ebill/services/backend_services.dart';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
@@ -11,13 +11,13 @@ import 'package:printing/printing.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
-import 'package:invoiso/common.dart';
-import 'package:invoiso/constants.dart';
-import 'package:invoiso/models/company_info.dart';
-import 'package:invoiso/models/invoice.dart';
-import 'package:invoiso/services/pdf_font_service.dart';
-import 'package:invoiso/services/shop_branding.dart';
-import 'package:invoiso/services/thermal_printer_service.dart';
+import 'package:ebill/common.dart';
+import 'package:ebill/constants.dart';
+import 'package:ebill/models/company_info.dart';
+import 'package:ebill/models/invoice.dart';
+import 'package:ebill/services/pdf_font_service.dart';
+import 'package:ebill/services/shop_branding.dart';
+import 'package:ebill/services/thermal_printer_service.dart';
 
 import 'pdf_settings.dart';
 import 'pdf_widgets.dart';

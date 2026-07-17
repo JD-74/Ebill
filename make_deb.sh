@@ -5,7 +5,7 @@ set -x
 # -------------------------
 # DEFAULT CONFIG
 # -------------------------
-APP_NAME="invoiso"
+APP_NAME="ebill"
 APP_VERSION="1.0.0"
 MAINTAINER="Anoop P <anooppkrishnan96@gmail.com>"
 BUILD_NUMBER_FILE=".build_number"
@@ -172,7 +172,7 @@ EOF
 # -------------------------
 cat <<EOF > "$PKG_DIR/usr/share/applications/$APP_NAME.desktop"
 [Desktop Entry]
-Name=Invoiso
+Name=Ebill
 Comment=Invoice generating desktop app built with Flutter
 Exec=$APP_NAME
 Icon=$APP_NAME

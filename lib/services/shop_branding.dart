@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
-import 'package:invoiso/database/company_info_service.dart';
-import 'package:invoiso/database/settings_service.dart';
-import 'package:invoiso/models/company_info.dart';
-import 'package:invoiso/services/pdf/pdf_service.dart';
+import 'package:ebill/database/company_info_service.dart';
+import 'package:ebill/database/settings_service.dart';
+import 'package:ebill/models/company_info.dart';
+import 'package:ebill/services/pdf/pdf_service.dart';
 
 /// Default CellTek shop identity for offline printable bills.
 class ShopBranding {
@@ -30,10 +30,12 @@ class ShopBranding {
   /// Seed company + logo for first run / placeholder installs.
   static Future<void> ensureDefaults() async {
     final existing = await CompanyInfoService.getCompanyInfo();
+    final existingWebsite = existing?.website.trim() ?? '';
     final needsCompanySeed = existing == null ||
         existing.name.trim().isEmpty ||
         existing.name == 'Your Company Name' ||
-        existing.gstin.trim().isEmpty;
+        existing.gstin.trim().isEmpty ||
+        existingWebsite.toLowerCase().contains('invoiso');
 
     if (needsCompanySeed) {
       final seeded = CompanyInfo(
@@ -52,9 +54,11 @@ class ShopBranding {
         email: (existing?.email.trim().isNotEmpty ?? false)
             ? existing!.email
             : email,
-        website: (existing?.website.trim().isNotEmpty ?? false)
-            ? existing!.website
-            : website,
+        website: existingWebsite.toLowerCase().contains('invoiso')
+            ? website
+            : ((existing?.website.trim().isNotEmpty ?? false)
+                ? existing!.website
+                : website),
         gstin: (existing?.gstin.trim().isNotEmpty ?? false)
             ? existing!.gstin
             : gstin,
@@ -70,11 +74,9 @@ class ShopBranding {
       }
     }
 
-    final logo = await SettingsService.getCompanyLogo();
-    if (logo == null || logo.isEmpty) {
-      final b64 = await loadDefaultLogoBase64();
-      await SettingsService.setCompanyLogo(b64);
-      PDFService.clearLogoCache();
-    }
+    // Always use the CellTek shop logo (replace any old Invoiso app logo).
+    final b64 = await loadDefaultLogoBase64();
+    await SettingsService.setCompanyLogo(b64);
+    PDFService.clearLogoCache();
   }
 }

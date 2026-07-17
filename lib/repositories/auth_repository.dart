@@ -1,4 +1,4 @@
-import 'package:invoiso/models/user.dart';
+import 'package:ebill/models/user.dart';
 
 abstract class AuthRepository {
   Future<User?> getUser(String username, String password);

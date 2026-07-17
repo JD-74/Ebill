@@ -1,10 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:invoiso/common.dart';
-import 'package:invoiso/domain/customer_identity.dart';
-import 'package:invoiso/domain/invoice_totals_calculator.dart';
-import 'package:invoiso/domain/payment_receipt_numbers.dart';
-import 'package:invoiso/utils/app_date.dart';
-import 'package:invoiso/utils/formatters.dart';
+import 'package:ebill/common.dart';
+import 'package:ebill/domain/customer_identity.dart';
+import 'package:ebill/domain/invoice_totals_calculator.dart';
+import 'package:ebill/domain/payment_receipt_numbers.dart';
+import 'package:ebill/utils/app_date.dart';
+import 'package:ebill/utils/formatters.dart';
 
 void main() {
   group('InvoiceTotalsCalculator', () {

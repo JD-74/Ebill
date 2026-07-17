@@ -2,8 +2,8 @@ import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:invoiso/database/settings_service.dart';
-import 'package:invoiso/providers/repositories.dart';
+import 'package:ebill/database/settings_service.dart';
+import 'package:ebill/providers/repositories.dart';
 
 import '../common.dart';
 import '../constants.dart';

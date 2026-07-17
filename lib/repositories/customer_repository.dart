@@ -1,4 +1,4 @@
-import 'package:invoiso/models/customer.dart';
+import 'package:ebill/models/customer.dart';
 
 abstract class CustomerRepository {
   Future<void> insertCustomer(Customer customer);

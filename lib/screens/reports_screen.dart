@@ -4,11 +4,11 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:invoiso/common.dart';
-import 'package:invoiso/constants.dart';
+import 'package:ebill/common.dart';
+import 'package:ebill/constants.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:invoiso/database/report_service.dart';
-import 'package:invoiso/providers/repositories.dart';
+import 'package:ebill/database/report_service.dart';
+import 'package:ebill/providers/repositories.dart';
 
 // ─── Date preset enum ─────────────────────────────────────────────────────────
 

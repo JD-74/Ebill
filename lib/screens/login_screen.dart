@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:invoiso/constants.dart';
-import 'package:invoiso/providers/repositories.dart';
-import 'package:invoiso/screens/change_password_screen.dart';
+import 'package:ebill/constants.dart';
+import 'package:ebill/providers/repositories.dart';
+import 'package:ebill/screens/change_password_screen.dart';
+import 'package:ebill/services/shop_branding.dart';
 
 import '../providers/app_config_provider.dart';
 import 'dashboard_screen.dart';
@@ -95,15 +96,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           color: Colors.white,
           child: Container(
             width: MediaQuery.sizeOf(context).width * 0.25,
+            constraints: const BoxConstraints(minWidth: 320, maxWidth: 420),
             padding: const EdgeInsets.all(32),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Image.asset(
-                  'assets/images/celltek_logo.png',
+                  ShopBranding.logoAsset,
                   width: 230,
                   height: 100,
                   fit: BoxFit.contain,
+                  errorBuilder: (_, __, ___) => const SizedBox.shrink(),
                 ),
                 AppSpacing.hXlarge,
                 TextField(
@@ -168,11 +171,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           )
                         : const Text('Login'),
                   ),
-                ),
-                AppSpacing.hLarge,
-                Text(
-                  AppConfig.version,
-                  style: TextStyle(fontSize: 12, color: Colors.grey[400]),
                 ),
               ],
             ),

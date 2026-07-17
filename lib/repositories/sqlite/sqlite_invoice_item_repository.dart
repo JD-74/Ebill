@@ -1,8 +1,8 @@
 
 
-import 'package:invoiso/database/invoice_item_service.dart';
-import 'package:invoiso/models/invoice_item.dart';
-import 'package:invoiso/repositories/invoice_item_repository.dart';
+import 'package:ebill/database/invoice_item_service.dart';
+import 'package:ebill/models/invoice_item.dart';
+import 'package:ebill/repositories/invoice_item_repository.dart';
 
 class SqliteInvoiceItemRepository implements InvoiceItemRepository
 {

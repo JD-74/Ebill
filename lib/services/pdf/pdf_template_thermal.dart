@@ -1,10 +1,10 @@
 import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:invoiso/common.dart';
-import 'package:invoiso/models/company_info.dart';
-import 'package:invoiso/models/invoice.dart';
-import 'package:invoiso/services/shop_branding.dart';
+import 'package:ebill/common.dart';
+import 'package:ebill/models/company_info.dart';
+import 'package:ebill/models/invoice.dart';
+import 'package:ebill/services/shop_branding.dart';
 import 'pdf_widgets.dart';
 
 const double _thermalMargin = 4 * PdfPageFormat.mm;
@@ -107,10 +107,20 @@ pw.Page buildThermalTemplate(
                         style: const pw.TextStyle(fontSize: smallFs)),
                   ),
                   pw.Expanded(
-                    child: pw.Text(item.product.name,
-                        style: pw.TextStyle(
-                            fontSize: smallFs,
-                            fontWeight: pw.FontWeight.bold)),
+                    child: pw.Column(
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        pw.Text(item.product.name,
+                            style: pw.TextStyle(
+                                fontSize: smallFs,
+                                fontWeight: pw.FontWeight.bold)),
+                        if (item.product.colour.trim().isNotEmpty)
+                          pw.Text('Colour: ${item.product.colour.trim()}',
+                              style: pw.TextStyle(
+                                  fontSize: smallFs - 1,
+                                  color: PdfColors.grey700)),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -165,8 +175,18 @@ pw.Page buildThermalTemplate(
                         style: const pw.TextStyle(fontSize: smallFs)),
                   ),
                   pw.Expanded(
-                    child: pw.Text(item.product.name,
-                        style: pw.TextStyle(fontSize: smallFs)),
+                    child: pw.Column(
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        pw.Text(item.product.name,
+                            style: pw.TextStyle(fontSize: smallFs)),
+                        if (item.product.colour.trim().isNotEmpty)
+                          pw.Text('Colour: ${item.product.colour.trim()}',
+                              style: pw.TextStyle(
+                                  fontSize: smallFs - 1,
+                                  color: PdfColors.grey700)),
+                      ],
+                    ),
                   ),
                   pw.SizedBox(
                     width: 30,
@@ -434,6 +454,8 @@ pw.Page buildThermalTemplate(
       if (showFooterBranding) ...[
         pw.SizedBox(height: 4),
         centerText('GSTIN: ${company?.gstin.isNotEmpty == true ? company!.gstin : ShopBranding.gstin}', fontSize: (smallFs-1), color: PdfColors.grey500),
+        pw.SizedBox(height: 2),
+        centerText('Powered by BRAND HUB', fontSize: (smallFs-1), color: PdfColors.grey600),
       ],
       pw.SizedBox(height: 4),
     ];

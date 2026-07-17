@@ -2,6 +2,7 @@ class Product {
   String id;
   String name;
   String description;
+  String colour;
   double price;
   int stock;
   String hsncode;
@@ -15,6 +16,7 @@ class Product {
     required this.id,
     required this.name,
     required this.description,
+    this.colour = '',
     required this.price,
     required this.stock,
     required this.hsncode,
@@ -31,6 +33,7 @@ class Product {
       id: map['id'] ?? '',
       name: map['name'] ?? '',
       description: map['description'] ?? '',
+      colour: map['colour'] ?? map['color'] ?? '',
       price: (map['price'] is int)
           ? (map['price'] as int).toDouble()
           : (map['price'] ?? 0.0).toDouble(),
@@ -48,6 +51,7 @@ class Product {
       id: map['product_id'] ?? '',
       name: map['product_name'] ?? '',
       description: map['product_description'] ?? '',
+      colour: map['product_colour'] ?? map['product_color'] ?? '',
       price: (map['product_price'] is int)
           ? (map['product_price'] as int).toDouble()
           : (map['product_price'] ?? 0.0).toDouble(),
@@ -66,6 +70,7 @@ class Product {
       'id': id,
       'name': name,
       'description': description,
+      'colour': colour,
       'price': price,
       'stock': stock,
       'hsncode': hsncode,

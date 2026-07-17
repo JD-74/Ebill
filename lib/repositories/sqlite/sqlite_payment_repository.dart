@@ -1,7 +1,7 @@
-import 'package:invoiso/database/payment_service.dart';
-import 'package:invoiso/models/invoice.dart';
-import 'package:invoiso/models/invoice_payment.dart';
-import 'package:invoiso/repositories/payment_repository.dart';
+import 'package:ebill/database/payment_service.dart';
+import 'package:ebill/models/invoice.dart';
+import 'package:ebill/models/invoice_payment.dart';
+import 'package:ebill/repositories/payment_repository.dart';
 
 class SqlitePaymentRepository implements PaymentRepository {
   @override

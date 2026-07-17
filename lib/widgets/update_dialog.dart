@@ -8,7 +8,7 @@ class UpdateDialog extends StatelessWidget {
   const UpdateDialog({super.key, required this.info});
 
   static const _downloadUrl =
-      'https://github.com/Anooppandikashala/invoiso/releases/latest';
+      'https://github.com/JD-74/Ebill/releases/latest';
 
   static Future<void> show(BuildContext context, UpdateInfo info) async {
     await showDialog<void>(

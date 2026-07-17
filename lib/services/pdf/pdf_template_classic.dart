@@ -1,10 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:invoiso/common.dart';
-import 'package:invoiso/constants.dart';
-import 'package:invoiso/models/company_info.dart';
-import 'package:invoiso/models/invoice.dart';
+import 'package:ebill/common.dart';
+import 'package:ebill/constants.dart';
+import 'package:ebill/models/company_info.dart';
+import 'package:ebill/models/invoice.dart';
 import 'pdf_widgets.dart';
 
 pw.MultiPage buildClassicTemplate(

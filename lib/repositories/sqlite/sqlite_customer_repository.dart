@@ -1,6 +1,6 @@
-import 'package:invoiso/database/customer_service.dart';
-import 'package:invoiso/models/customer.dart';
-import 'package:invoiso/repositories/customer_repository.dart';
+import 'package:ebill/database/customer_service.dart';
+import 'package:ebill/models/customer.dart';
+import 'package:ebill/repositories/customer_repository.dart';
 
 class SqliteCustomerRepository implements CustomerRepository {
   @override

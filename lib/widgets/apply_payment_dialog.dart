@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:invoiso/domain/invoice_calculator.dart';
-import 'package:invoiso/models/invoice.dart';
-import 'package:invoiso/models/invoice_payment.dart';
-import 'package:invoiso/providers/repositories.dart';
-import 'package:invoiso/services/payment_receipt_service.dart';
-import 'package:invoiso/utils/app_date.dart';
+import 'package:ebill/domain/invoice_calculator.dart';
+import 'package:ebill/models/invoice.dart';
+import 'package:ebill/models/invoice_payment.dart';
+import 'package:ebill/providers/repositories.dart';
+import 'package:ebill/services/payment_receipt_service.dart';
+import 'package:ebill/utils/app_date.dart';
 
 class ApplyPaymentDialog extends ConsumerStatefulWidget {
   final Invoice invoice;

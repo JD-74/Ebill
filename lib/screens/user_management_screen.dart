@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:invoiso/database/user_service.dart';
-import 'package:invoiso/providers/repositories.dart';
+import 'package:ebill/database/user_service.dart';
+import 'package:ebill/providers/repositories.dart';
 import '../constants.dart';
 import '../models/user.dart';
 import '../utils/password_utils.dart';

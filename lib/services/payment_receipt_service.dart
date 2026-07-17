@@ -1,12 +1,12 @@
 import 'dart:convert';
-import 'package:invoiso/services/backend_services.dart';
+import 'package:ebill/services/backend_services.dart';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:invoiso/common.dart';
-import 'package:invoiso/models/invoice.dart';
-import 'package:invoiso/models/invoice_payment.dart';
-import 'package:invoiso/services/pdf_font_service.dart';
+import 'package:ebill/common.dart';
+import 'package:ebill/models/invoice.dart';
+import 'package:ebill/models/invoice_payment.dart';
+import 'package:ebill/services/pdf_font_service.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';

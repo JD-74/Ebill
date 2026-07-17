@@ -1,6 +1,6 @@
-import 'package:invoiso/database/report_service.dart';
-import 'package:invoiso/models/report_models.dart';
-import 'package:invoiso/repositories/report_repository.dart';
+import 'package:ebill/database/report_service.dart';
+import 'package:ebill/models/report_models.dart';
+import 'package:ebill/repositories/report_repository.dart';
 
 class SqliteReportRepository implements ReportRepository {
   @override

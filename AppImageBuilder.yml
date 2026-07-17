@@ -3,11 +3,11 @@ version: 1
 AppDir:
   path: ./AppDir
   app_info:
-    id: com.invoiso
-    name: Invoiso
+    id: com.ebill
+    name: Ebill
     icon: logo
     version: 1.0.0
-    exec: usr/bin/invoiso
+    exec: usr/bin/ebill
     exec_args: $@
 
   apt:

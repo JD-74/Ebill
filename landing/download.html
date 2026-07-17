@@ -12,7 +12,7 @@
     <title>Download Free Billing Software for PC | Ebill</title>
 
     <!-- Canonical URL -->
-    <link rel="canonical" href="https://invoiso.co.in/download.html" />
+    <link rel="canonical" href="https://ebill.co.in/download.html" />
 
     <!-- Theme Color -->
     <meta name="theme-color" content="#06080f" />
@@ -20,8 +20,8 @@
     <!-- Open Graph -->
     <meta property="og:title" content="Download Free Billing Software for PC | Ebill" />
     <meta property="og:description" content="Download Ebill for Windows, Linux and macOS. Free offline billing software for small businesses with GST-ready PDF invoices. No account or subscription." />
-    <meta property="og:image" content="https://invoiso.co.in/assets/images/invoiso_banner.webp" />
-    <meta property="og:url" content="https://invoiso.co.in/download.html" />
+    <meta property="og:image" content="https://ebill.co.in/assets/images/ebill_banner.webp" />
+    <meta property="og:url" content="https://ebill.co.in/download.html" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="en_US" />
     <meta property="og:site_name" content="Ebill" />
@@ -30,7 +30,7 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Download Free Billing Software for PC | Ebill" />
     <meta name="twitter:description" content="Free offline billing software for Windows, Linux and macOS. GST-ready PDF invoices, no account, no subscription. Download and run instantly." />
-    <meta name="twitter:image" content="https://invoiso.co.in/assets/images/invoiso_banner.webp" />
+    <meta name="twitter:image" content="https://ebill.co.in/assets/images/ebill_banner.webp" />
 
     <!-- Favicon & Icons -->
         <link rel="icon" type="image/svg+xml" href="assets/images/logo.svg" />
@@ -1370,8 +1370,8 @@
       "applicationCategory": "BusinessApplication",
       "description": "Free billing software and offline invoicing software for Windows, Linux and macOS. Create GST-ready PDF invoices, manage customers and products without internet access.",
       "softwareVersion": "4.1.7",
-      "url": "https://invoiso.co.in/",
-      "downloadUrl": "https://invoiso.co.in/download.html",
+      "url": "https://ebill.co.in/",
+      "downloadUrl": "https://ebill.co.in/download.html",
       "offers": {
         "@type": "Offer",
         "price": "0",
@@ -1396,8 +1396,8 @@
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       "itemListElement": [
-        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://invoiso.co.in/" },
-        { "@type": "ListItem", "position": 2, "name": "Download", "item": "https://invoiso.co.in/download.html" }
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://ebill.co.in/" },
+        { "@type": "ListItem", "position": 2, "name": "Download", "item": "https://ebill.co.in/download.html" }
       ]
     }
     </script>
@@ -1789,7 +1789,7 @@
           var dl   = e.asset.download_count || 0;
           var meta = [size, dl ? dl.toLocaleString() + ' downloads' : ''].filter(Boolean).join(' · ');
           var safeName = e.asset.name.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
-          var displayName = e.asset.name.replace(/Invoiso/gi, 'Ebill').replace(/invoiso/gi, 'Ebill');
+          var displayName = e.asset.name.replace(/Invoiso/gi, 'Ebill').replace(/invoiso/gi, 'ebill');
           return (
             '<a href="' + escHtml(e.asset.browser_download_url) + '" class="asset-btn" onclick="trackDownload(\'' + safeName + '\',\'' + e.info.os + '\')" aria-label="Download ' + escHtml(displayName) + '">' +
               '<span class="asset-icon"><i class="' + e.info.icon + '" aria-hidden="true"></i></span>' +
@@ -1848,7 +1848,7 @@
           var latestDate = new Date(latest.published_at).toLocaleDateString('en-US', {
             year: 'numeric', month: 'long', day: 'numeric',
           });
-          var releaseTitle = (latest.name || latest.tag_name || '').replace(/Invoiso/gi, 'Ebill');
+          var releaseTitle = (latest.name || latest.tag_name || '').replace(/Invoiso/gi, 'Ebill').replace(/invoiso/gi, 'Ebill');
 
           var windows = [], linux = [], macos = [], other = [];
           (latest.assets || []).forEach(function (asset) {
@@ -1935,6 +1935,7 @@
       fetchReleasesJson('https://api.github.com/repos/JD-74/Ebill/releases?per_page=100')
         .then(function (releases) {
           if (releasesHaveInstallers(releases)) return releases;
+          // Upstream release assets may still live under the old public repo name.
           return fetchReleasesJson('https://api.github.com/repos/Anooppandikashala/invoiso/releases?per_page=100');
         })
         .then(loadReleases)

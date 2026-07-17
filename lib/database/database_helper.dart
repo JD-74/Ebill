@@ -14,7 +14,7 @@ class DatabaseHelper {
   static String? _path;
   static String? get path => _path;
   static Database? _database;
-  final dbVersion = 26;
+  final dbVersion = 28;
 
   Future<Database> get database async {
     if (_database != null) return _database!;
@@ -54,6 +54,7 @@ class DatabaseHelper {
         price REAL,
         stock INTEGER,
         hsncode TEXT,
+        colour TEXT DEFAULT '',
         tax_rate INTEGER,
         type TEXT DEFAULT 'product',
         default_discount REAL DEFAULT 0,
@@ -98,6 +99,7 @@ class DatabaseHelper {
         product_price REAL,
         product_tax_rate INTEGER,
         product_hsn_code TEXT,
+        product_colour TEXT DEFAULT '',
         quantity REAL,
         discount REAL,
         unit_price REAL,
@@ -477,6 +479,82 @@ class DatabaseHelper {
           db, 25, 'add_product_purchase_price_to_invoice_items', () async {
         await db.execute(
           'ALTER TABLE invoice_items ADD COLUMN product_purchase_price REAL DEFAULT 0.0',
+        );
+      });
+    }
+
+    if (oldVersion < 27) {
+      await _runMigrationStep(db, 27, 'repair_default_admin_credentials',
+          () async {
+        final users = await db.query(
+          'users',
+          where: "LOWER(username) = 'admin'",
+          limit: 1,
+        );
+        if (users.isEmpty) {
+          final salt = PasswordUtils.generateSalt();
+          final hashedPw = PasswordUtils.hashWithSalt('admin', salt);
+          await db.insert('users', {
+            'id': 'user-001',
+            'username': 'admin',
+            'password': hashedPw,
+            'user_type': 'admin',
+            'salt': salt,
+            'password_changed': 0,
+          });
+          return;
+        }
+
+        final row = users.first;
+        final saltValue = (row['salt'] as String?) ?? '';
+        final storedHash = row['password'] as String? ?? '';
+        final defaultWorks =
+            PasswordUtils.verify('admin', storedHash, saltValue);
+
+        // Restore documented offline defaults when admin/admin no longer verifies.
+        if (!defaultWorks) {
+          final salt = PasswordUtils.generateSalt();
+          final hashedPw = PasswordUtils.hashWithSalt('admin', salt);
+          await db.update(
+            'users',
+            {
+              'username': 'admin',
+              'password': hashedPw,
+              'salt': salt,
+              'password_changed': 0,
+              'user_type': 'admin',
+            },
+            where: 'id = ?',
+            whereArgs: [row['id']],
+          );
+        }
+      });
+
+      await _runMigrationStep(db, 27, 'clear_legacy_invoiso_website', () async {
+        final rows = await db.query('company_info', limit: 1);
+        if (rows.isEmpty) return;
+        final website = (rows.first['website'] as String? ?? '').toLowerCase();
+        if (website.contains('invoiso')) {
+          await db.update(
+            'company_info',
+            {'website': ''},
+            where: 'id = ?',
+            whereArgs: [rows.first['id']],
+          );
+        }
+      });
+    }
+
+    if (oldVersion < 28) {
+      await _runMigrationStep(db, 28, 'add_colour_to_products', () async {
+        await db.execute(
+          "ALTER TABLE products ADD COLUMN colour TEXT DEFAULT ''",
+        );
+      });
+      await _runMigrationStep(db, 28, 'add_product_colour_to_invoice_items',
+          () async {
+        await db.execute(
+          "ALTER TABLE invoice_items ADD COLUMN product_colour TEXT DEFAULT ''",
         );
       });
     }

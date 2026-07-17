@@ -1,4 +1,4 @@
-import 'package:invoiso/models/user.dart';
+import 'package:ebill/models/user.dart';
 import '../utils/session_manager.dart';
 import 'database_helper.dart';
 import '../utils/app_logger.dart';
@@ -13,13 +13,13 @@ class UserService {
   // CRUD for User
 
   /// Looks up a user by username and verifies the password.
-  /// Supports both legacy SHA-256 (salt == null) and HMAC-SHA256.
+  /// Supports both legacy SHA-256 (salt == null/empty) and HMAC-SHA256.
   static Future<User?> getUser(String username, String password) async {
     final db = await dbHelper.database;
     final result = await db.query(
       'users',
-      where: 'username = ?',
-      whereArgs: [username],
+      where: 'LOWER(username) = LOWER(?)',
+      whereArgs: [username.trim()],
     );
 
     if (result.isEmpty) return null;
@@ -29,6 +29,53 @@ class UserService {
       return user;
     }
     return null;
+  }
+
+  /// Ensures the default offline admin account exists and that
+  /// `admin` / `admin` works when a forced first-login reset is still pending.
+  static Future<void> ensureDefaultAdminCredentials() async {
+    final db = await dbHelper.database;
+    final result = await db.query(
+      'users',
+      where: "LOWER(username) = 'admin'",
+      limit: 1,
+    );
+
+    if (result.isEmpty) {
+      final salt = PasswordUtils.generateSalt();
+      final hashedPw = PasswordUtils.hashWithSalt('admin', salt);
+      await db.insert('users', {
+        'id': 'user-001',
+        'username': 'admin',
+        'password': hashedPw,
+        'user_type': 'admin',
+        'salt': salt,
+        'password_changed': 0,
+      });
+      return;
+    }
+
+    final user = User.fromMap(result.first);
+    final defaultWorks =
+        PasswordUtils.verify('admin', user.password, user.salt);
+
+    // Restore documented offline defaults whenever admin/admin no longer verifies.
+    if (!defaultWorks) {
+      final salt = PasswordUtils.generateSalt();
+      final hashedPw = PasswordUtils.hashWithSalt('admin', salt);
+      await db.update(
+        'users',
+        {
+          'username': 'admin',
+          'password': hashedPw,
+          'salt': salt,
+          'password_changed': 0,
+          'user_type': 'admin',
+        },
+        where: 'id = ?',
+        whereArgs: [user.id],
+      );
+    }
   }
 
   static Future<User?> getUserByUsername(String username) async {

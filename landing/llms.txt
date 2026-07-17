@@ -24,12 +24,12 @@ Ebill is built for freelancers, small businesses, shop owners, and consultants w
 
 ## Pages
 
-- [Home](https://invoiso.co.in/) — Overview and features
-- [Download](https://invoiso.co.in/download.html) — Latest release for Windows, Linux, and macOS
-- [Free Online Invoice Maker](https://invoiso.co.in/invoice-maker.html) — Browser-based PDF invoice generator, no signup
-- [Release Notes](https://invoiso.co.in/changelog.html) — Full version history
-- [Privacy](https://invoiso.co.in/privacy.html) — Privacy policy
-- [Terms](https://invoiso.co.in/terms.html) — Terms of use
+- [Home](https://ebill.co.in/) — Overview and features
+- [Download](https://ebill.co.in/download.html) — Latest release for Windows, Linux, and macOS
+- [Free Online Invoice Maker](https://ebill.co.in/invoice-maker.html) — Browser-based PDF invoice generator, no signup
+- [Release Notes](https://ebill.co.in/changelog.html) — Full version history
+- [Privacy](https://ebill.co.in/privacy.html) — Privacy policy
+- [Terms](https://ebill.co.in/terms.html) — Terms of use
 
 ## Support
 

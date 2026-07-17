@@ -12,7 +12,7 @@ contents:
   - x: 170
     y: 200
     type: file
-    path: "invoiso.app"
+    path: "ebill.app"
   - x: 430
     y: 200
     type: link

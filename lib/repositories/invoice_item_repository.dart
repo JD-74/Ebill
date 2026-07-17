@@ -1,4 +1,4 @@
-import 'package:invoiso/models/invoice_item.dart';
+import 'package:ebill/models/invoice_item.dart';
 
 abstract class InvoiceItemRepository {
   Future<void> insertInvoiceItems(String invId, InvoiceItem item);

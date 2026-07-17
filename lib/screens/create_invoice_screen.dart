@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:invoiso/common.dart';
-import 'package:invoiso/domain/invoice_totals_calculator.dart';
-import 'package:invoiso/providers/app_config_provider.dart';
-import 'package:invoiso/providers/repositories.dart';
+import 'package:ebill/common.dart';
+import 'package:ebill/domain/invoice_totals_calculator.dart';
+import 'package:ebill/providers/app_config_provider.dart';
+import 'package:ebill/providers/repositories.dart';
 import 'package:uuid/uuid.dart';
 import '../models/customer.dart';
 import '../models/invoice.dart';
@@ -17,7 +17,7 @@ import '../models/product.dart';
 import '../models/additional_cost.dart';
 import '../services/invoice_pdf_services.dart';
 import '../services/pdf_service.dart';
-import 'package:invoiso/constants.dart';
+import 'package:ebill/constants.dart';
 
 class InvoiceFormGuard {
   Future<bool> Function()? canLeave;
@@ -1051,11 +1051,24 @@ class _CreateInvoiceScreenState extends ConsumerState<CreateInvoiceScreen> {
                       ),
                       const SizedBox(width: 12),
                       Expanded(
-                        child: Text(
-                          item.product.name,
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: AppFontSize.xlarge),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              item.product.name,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: AppFontSize.xlarge),
+                            ),
+                            if (item.product.colour.trim().isNotEmpty)
+                              Text(
+                                'Colour: ${item.product.colour}',
+                                style: TextStyle(
+                                  fontSize: AppFontSize.small,
+                                  color: Colors.grey[700],
+                                ),
+                              ),
+                          ],
                         ),
                       ),
                       if (_businessType == BusinessType.both) ...[
@@ -1846,6 +1859,15 @@ class _CreateInvoiceScreenState extends ConsumerState<CreateInvoiceScreen> {
                             subtitle: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                if (product.colour.trim().isNotEmpty)
+                                  Text(
+                                    'Colour: ${product.colour}',
+                                    maxLines: 1,
+                                    style: const TextStyle(
+                                        color: Colors.teal,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: AppFontSize.small),
+                                  ),
                                 Text(
                                   'HSN: ${product.hsncode.toUpperCase()}',
                                   maxLines: 2,
@@ -2993,11 +3015,15 @@ class _CreateInvoiceScreenState extends ConsumerState<CreateInvoiceScreen> {
                             ),
                             title: Row(
                               children: [
-                                Text(
-                                  item.product.name,
-                                  style: const TextStyle(
-                                    fontSize: AppFontSize.medium,
-                                    fontWeight: FontWeight.bold,
+                                Flexible(
+                                  child: Text(
+                                    item.product.colour.trim().isEmpty
+                                        ? item.product.name
+                                        : '${item.product.name} (${item.product.colour})',
+                                    style: const TextStyle(
+                                      fontSize: AppFontSize.medium,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
                                 AppSpacing.wMedium,
@@ -3142,6 +3168,7 @@ class _CreateInvoiceScreenState extends ConsumerState<CreateInvoiceScreen> {
                                         final newProduct = Product(
                                           id: const Uuid().v4(),
                                           name: item.product.name,
+                                          colour: item.product.colour,
                                           description: '',
                                           price: item.effectivePrice,
                                           stock: 0,

@@ -2,10 +2,10 @@ import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:qr/qr.dart';
-import 'package:invoiso/common.dart';
-import 'package:invoiso/constants.dart';
-import 'package:invoiso/models/company_info.dart';
-import 'package:invoiso/models/invoice.dart';
+import 'package:ebill/common.dart';
+import 'package:ebill/constants.dart';
+import 'package:ebill/models/company_info.dart';
+import 'package:ebill/models/invoice.dart';
 
 pw.Widget buildCompanyLogo(pw.MemoryImage image, {double size = 90}) {
   return pw.Container(
@@ -29,7 +29,7 @@ pw.Widget buildLogoWatermark(pw.MemoryImage? logo, {double size = 280}) {
   );
 }
 
-/// Invoice footer with shop address + GSTIN and page numbers.
+/// Invoice footer with shop details (left) and Powered by BRAND HUB (right).
 pw.Widget buildShopInvoiceFooter({
   required CompanyInfo? company,
   required int pageNumber,
@@ -44,43 +44,61 @@ pw.Widget buildShopInvoiceFooter({
     alignment: pw.Alignment.center,
     margin: const pw.EdgeInsets.only(top: 12),
     child: pw.Column(
-      crossAxisAlignment: pw.CrossAxisAlignment.center,
+      crossAxisAlignment: pw.CrossAxisAlignment.stretch,
       children: [
         pw.Divider(color: PdfColors.grey300, thickness: 0.5),
         pw.SizedBox(height: 4),
-        if (name.isNotEmpty)
-          pw.Text(
-            name,
-            style: pw.TextStyle(
-              fontSize: 8,
-              fontWeight: pw.FontWeight.bold,
-              color: PdfColors.grey700,
+        pw.Row(
+          crossAxisAlignment: pw.CrossAxisAlignment.end,
+          children: [
+            pw.Expanded(
+              child: pw.Column(
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                children: [
+                  if (name.isNotEmpty)
+                    pw.Text(
+                      name,
+                      style: pw.TextStyle(
+                        fontSize: 8,
+                        fontWeight: pw.FontWeight.bold,
+                        color: PdfColors.grey700,
+                      ),
+                    ),
+                  if (address.isNotEmpty)
+                    pw.Text(
+                      address,
+                      style: const pw.TextStyle(
+                          fontSize: 7.5, color: PdfColors.grey600),
+                    ),
+                  if (showGst && gstin.isNotEmpty)
+                    pw.Text(
+                      'GSTIN: $gstin',
+                      style: pw.TextStyle(
+                        fontSize: 8,
+                        fontWeight: pw.FontWeight.bold,
+                        color: PdfColors.grey700,
+                      ),
+                    ),
+                  pw.SizedBox(height: 2),
+                  pw.Text(
+                    'Page $pageNumber of $pagesCount',
+                    style: pw.TextStyle(
+                      fontSize: PdfLayout.footerBrandingFontSize,
+                      color: PdfColors.grey500,
+                    ),
+                  ),
+                ],
+              ),
             ),
-            textAlign: pw.TextAlign.center,
-          ),
-        if (address.isNotEmpty)
-          pw.Text(
-            address,
-            style: const pw.TextStyle(fontSize: 7.5, color: PdfColors.grey600),
-            textAlign: pw.TextAlign.center,
-          ),
-        if (showGst && gstin.isNotEmpty)
-          pw.Text(
-            'GSTIN: $gstin',
-            style: pw.TextStyle(
-              fontSize: 8,
-              fontWeight: pw.FontWeight.bold,
-              color: PdfColors.grey700,
+            pw.Text(
+              'Powered by BRAND HUB',
+              style: pw.TextStyle(
+                fontSize: 8,
+                fontWeight: pw.FontWeight.bold,
+                color: PdfColors.grey700,
+              ),
             ),
-            textAlign: pw.TextAlign.center,
-          ),
-        pw.SizedBox(height: 2),
-        pw.Text(
-          'Page $pageNumber of $pagesCount',
-          style: pw.TextStyle(
-            fontSize: PdfLayout.footerBrandingFontSize,
-            color: PdfColors.grey500,
-          ),
+          ],
         ),
       ],
     ),
@@ -616,6 +634,14 @@ pw.Widget buildInvoiceTable(Invoice invoice,
                 children: [
                   pw.Text(item.product.name,
                       style: pw.TextStyle(fontSize: tableFontSize * 0.9)),
+                  if (item.product.colour.trim().isNotEmpty)
+                    pw.Text(
+                      'Colour: ${item.product.colour.trim()}',
+                      style: pw.TextStyle(
+                        fontSize: tableFontSize * 0.75,
+                        color: PdfColors.grey700,
+                      ),
+                    ),
                   if (showTypeTag && businessType == BusinessType.both)
                     pw.Text(
                       item.product.type == 'service' ? 'Service' : 'Product',

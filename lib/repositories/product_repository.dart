@@ -1,4 +1,4 @@
-import 'package:invoiso/models/product.dart';
+import 'package:ebill/models/product.dart';
 
 abstract class ProductRepository {
   Future<void> insertProduct(Product product);

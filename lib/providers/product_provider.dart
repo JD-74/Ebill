@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:invoiso/providers/repositories.dart';
+import 'package:ebill/providers/repositories.dart';
 import '../models/product.dart';
 
 class ProductNotifier extends AsyncNotifier<List<Product>> {

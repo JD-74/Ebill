@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:invoiso/database/database_helper.dart';
-import 'package:invoiso/screens/login_screen.dart';
-import 'package:invoiso/constants.dart';
-import 'package:invoiso/services/shop_branding.dart';
-import 'package:invoiso/utils/app_logger.dart';
+import 'package:ebill/database/database_helper.dart';
+import 'package:ebill/database/user_service.dart';
+import 'package:ebill/screens/login_screen.dart';
+import 'package:ebill/constants.dart';
+import 'package:ebill/services/shop_branding.dart';
+import 'package:ebill/utils/app_logger.dart';
 
 const _tag = 'SplashScreen';
 
@@ -25,6 +26,7 @@ class _SplashScreenState extends State<SplashScreen> {
     try {
       await DatabaseHelper().database;
       await ShopBranding.ensureDefaults();
+      await UserService.ensureDefaultAdminCredentials();
     } catch (e, stack) {
       AppLogger.e(_tag, 'Database initialization failed', e, stack);
       if (!mounted) return;

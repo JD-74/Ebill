@@ -1,4 +1,4 @@
-import 'package:invoiso/models/product.dart';
+import 'package:ebill/models/product.dart';
 
 import '../domain/invoice_totals_calculator.dart';
 

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:invoiso/services/backend_services.dart';
-import 'package:invoiso/services/thermal_printer_service.dart';
-import 'package:invoiso/models/invoice.dart';
-import 'package:invoiso/services/pdf_service.dart';
+import 'package:ebill/services/backend_services.dart';
+import 'package:ebill/services/thermal_printer_service.dart';
+import 'package:ebill/models/invoice.dart';
+import 'package:ebill/services/pdf_service.dart';
 import 'package:pdf/pdf.dart';
 import 'package:printing/printing.dart';
 

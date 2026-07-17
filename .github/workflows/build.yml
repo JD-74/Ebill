@@ -66,12 +66,12 @@ jobs:
           VERSION="${VERSION#test-v}"
           VERSION="${VERSION#v}"
           mkdir -p dist
-          # FastForge may emit invoiso-* or Ebill-Setup*; normalize to ebill-<ver>-windows-setup.exe
+          # FastForge may emit ebill-*, Ebill-Setup*, or legacy invoiso-*; normalize to ebill-<ver>-windows-setup.exe
           while IFS= read -r -d '' f; do
             dir=$(dirname "$f")
             mv "$f" "$dir/ebill-${VERSION}-windows-setup.exe"
             echo "Renamed to $dir/ebill-${VERSION}-windows-setup.exe"
-          done < <(find dist -type f \( -name 'invoiso-*-windows-setup.exe' -o -name 'Ebill-Setup*.exe' -o -name 'EbillSetup*.exe' \) -print0)
+          done < <(find dist -type f \( -name 'ebill-*-windows-setup.exe' -o -name 'Ebill-Setup*.exe' -o -name 'EbillSetup*.exe' -o -name 'invoiso-*-windows-setup.exe' -o -name 'Invoiso-Setup*.exe' \) -print0)
           count=$(find dist -name "ebill-*-windows-setup.exe" | wc -l)
           if [ "$count" -eq 0 ]; then
             echo "ERROR: No Ebill Windows installer found in dist/"
@@ -133,13 +133,13 @@ jobs:
           VERSION="${VERSION#v}"
           DEB_FILE=$(find dist/$VERSION -name "*.deb" | head -1)
           echo "Found deb: $DEB_FILE"
-          mv "$DEB_FILE" Invoiso-$VERSION-ubuntu22.deb
+          mv "$DEB_FILE" Ebill-$VERSION-ubuntu22.deb
 
       - name: Upload .deb
         uses: actions/upload-artifact@v4
         with:
-          name: Invoiso-Ubuntu22.deb
-          path: Invoiso-*-ubuntu22.deb
+          name: Ebill-Ubuntu22.deb
+          path: Ebill-*-ubuntu22.deb
 
   # ─────────────────────────────────────────────────────────────
   # Linux — build .deb for Ubuntu 24.04
@@ -203,7 +203,7 @@ jobs:
           echo "--- deb contents ---"
           find /tmp/deb_root -type f | sort
 
-          mkdir -p /tmp/deb_root/usr/share/invoiso/lib
+          mkdir -p /tmp/deb_root/usr/share/ebill/lib
 
           LIBSQLITE=$(find /usr/lib -name "libsqlite3.so.0.*" | sort -V | tail -1)
           if [ -z "$LIBSQLITE" ]; then
@@ -211,25 +211,25 @@ jobs:
             LIBSQLITE=$(find /usr/lib -name "libsqlite3.so.0.*" | sort -V | tail -1)
           fi
           echo "Bundling libsqlite3: $LIBSQLITE"
-          cp "$LIBSQLITE" /tmp/deb_root/usr/share/invoiso/lib/libsqlite3.so
-          echo "Injected libsqlite3.so into deb at /usr/share/invoiso/lib/"
+          cp "$LIBSQLITE" /tmp/deb_root/usr/share/ebill/lib/libsqlite3.so
+          echo "Injected libsqlite3.so into deb at /usr/share/ebill/lib/"
 
           mkdir -p /tmp/deb_root/usr/bin
-          printf '#!/bin/sh\nexport LD_LIBRARY_PATH=/usr/share/invoiso/lib:$LD_LIBRARY_PATH\nexec /usr/share/invoiso/invoiso "$@"\n' \
-            > /tmp/deb_root/usr/bin/invoiso
-          chmod 755 /tmp/deb_root/usr/bin/invoiso
-          echo "Created LD_LIBRARY_PATH launcher at /usr/bin/invoiso"
+          printf '#!/bin/sh\nexport LD_LIBRARY_PATH=/usr/share/ebill/lib:$LD_LIBRARY_PATH\nexec /usr/share/ebill/ebill "$@"\n' \
+            > /tmp/deb_root/usr/bin/ebill
+          chmod 755 /tmp/deb_root/usr/bin/ebill
+          echo "Created LD_LIBRARY_PATH launcher at /usr/bin/ebill"
 
           dpkg-deb -b /tmp/deb_root "$DEB_FILE"
           echo "Repacked with LD_LIBRARY_PATH launcher"
 
-          mv "$DEB_FILE" Invoiso-$VERSION-ubuntu24.deb
+          mv "$DEB_FILE" Ebill-$VERSION-ubuntu24.deb
 
       - name: Upload .deb
         uses: actions/upload-artifact@v4
         with:
-          name: Invoiso-Ubuntu24.deb
-          path: Invoiso-*-ubuntu24.deb
+          name: Ebill-Ubuntu24.deb
+          path: Ebill-*-ubuntu24.deb
 
   # ─────────────────────────────────────────────────────────────
   # Linux — build AppImage
@@ -299,7 +299,7 @@ jobs:
       - name: Upload AppImage
         uses: actions/upload-artifact@v4
         with:
-          name: Invoiso-AppImage
+          name: Ebill-AppImage
           path: "*.AppImage"
 
   # ─────────────────────────────────────────────────────────────
@@ -380,14 +380,14 @@ jobs:
           #!/bin/sh
           HERE="$(dirname "$(readlink -f "${0}")")"
           export LD_LIBRARY_PATH="${HERE}/usr/lib:${HERE}/usr/bin/lib:${LD_LIBRARY_PATH}"
-          exec "${HERE}/usr/bin/invoiso" "$@"
+          exec "${HERE}/usr/bin/ebill" "$@"
           EOF
           chmod +x AppDir/AppRun
 
-          cat > AppDir/invoiso.desktop << 'EOF'
+          cat > AppDir/ebill.desktop << 'EOF'
           [Desktop Entry]
-          Name=Invoiso
-          Exec=invoiso
+          Name=Ebill
+          Exec=ebill
           Icon=logo
           Type=Application
           Categories=Office;
@@ -406,13 +406,13 @@ jobs:
 
           ARCH=x86_64 APPIMAGE_EXTRACT_AND_RUN=1 \
             /tmp/appimagetool.AppImage AppDir \
-            "Invoiso-${VERSION}-ubuntu24-x86_64.AppImage"
+            "Ebill-${VERSION}-ubuntu24-x86_64.AppImage"
 
       - name: Upload AppImage
         uses: actions/upload-artifact@v4
         with:
-          name: Invoiso-AppImage-Ubuntu24
-          path: "Invoiso-*-ubuntu24-x86_64.AppImage"
+          name: Ebill-AppImage-Ubuntu24
+          path: "Ebill-*-ubuntu24-x86_64.AppImage"
 
 
   # ─────────────────────────────────────────────────────────────
@@ -483,15 +483,15 @@ jobs:
           VERSION="${GITHUB_REF#refs/tags/}"
           VERSION="${VERSION#test-v}"
           VERSION="${VERSION#v}"
-          FINAL_DMG="dist/invoiso-${VERSION}-macos.dmg"
+          FINAL_DMG="dist/ebill-${VERSION}-macos.dmg"
           mv "$DMG" "$FINAL_DMG"
           echo "Renamed to: $FINAL_DMG"
 
       - name: Upload macOS DMG
         uses: actions/upload-artifact@v4
         with:
-          name: Invoiso-macOS
-          path: dist/invoiso-*-macos.dmg
+          name: Ebill-macOS
+          path: dist/ebill-*-macos.dmg
 
   # ─────────────────────────────────────────────────────────────
   # Release — collect artifacts and publish GitHub Release
@@ -499,7 +499,7 @@ jobs:
   # ─────────────────────────────────────────────────────────────
   create-release:
     needs: [build-windows, build-linux, build-linux-ubuntu24, build-appimage, build-appimage-ubuntu24, build-macos]
-    if: always() && vars.INVOISO_RELEASE == 'true' # Run even if some builds are skipped; skip entirely if INVOISO_RELEASE is not 'true'
+    if: always() && (vars.EBILL_RELEASE == 'true' || vars.INVOISO_RELEASE == 'true') # Prefer EBILL_RELEASE; keep INVOISO_RELEASE for existing repo vars
     runs-on: ubuntu-latest
 
     steps:
@@ -514,35 +514,35 @@ jobs:
       - name: Download Ubuntu22 .deb
         uses: actions/download-artifact@v4
         with:
-          name: Invoiso-Ubuntu22.deb
+          name: Ebill-Ubuntu22.deb
           path: release-assets/
         continue-on-error: true
 
       - name: Download AppImage
         uses: actions/download-artifact@v4
         with:
-          name: Invoiso-AppImage
+          name: Ebill-AppImage
           path: release-assets/
         continue-on-error: true
 
       - name: Download Ubuntu24 .deb
         uses: actions/download-artifact@v4
         with:
-          name: Invoiso-Ubuntu24.deb
+          name: Ebill-Ubuntu24.deb
           path: release-assets/
         continue-on-error: true
 
       - name: Download Ubuntu24 AppImage
         uses: actions/download-artifact@v4
         with:
-          name: Invoiso-AppImage-Ubuntu24
+          name: Ebill-AppImage-Ubuntu24
           path: release-assets/
         continue-on-error: true
 
       - name: Download macOS DMG
         uses: actions/download-artifact@v4
         with:
-          name: Invoiso-macOS
+          name: Ebill-macOS
           path: release-assets/
         continue-on-error: true
 

@@ -1,12 +1,12 @@
-import 'package:invoiso/common.dart';
-import 'package:invoiso/database/invoice_item_service.dart';
-import 'package:invoiso/database/settings_service.dart';
-import 'package:invoiso/domain/invoice_calculator.dart';
-import 'package:invoiso/domain/invoice_totals_calculator.dart';
-import 'package:invoiso/database/product_service.dart';
-import 'package:invoiso/models/additional_cost.dart';
-import 'package:invoiso/models/invoice.dart';
-import 'package:invoiso/models/product.dart';
+import 'package:ebill/common.dart';
+import 'package:ebill/database/invoice_item_service.dart';
+import 'package:ebill/database/settings_service.dart';
+import 'package:ebill/domain/invoice_calculator.dart';
+import 'package:ebill/domain/invoice_totals_calculator.dart';
+import 'package:ebill/database/product_service.dart';
+import 'package:ebill/models/additional_cost.dart';
+import 'package:ebill/models/invoice.dart';
+import 'package:ebill/models/product.dart';
 import '../models/customer.dart';
 import '../models/invoice_item.dart';
 import '../models/invoice_payment.dart';
@@ -58,6 +58,7 @@ class InvoiceService {
           'product_price': item.product.price,
           'product_tax_rate': item.product.tax_rate,
           'product_hsn_code': item.product.hsncode,
+          'product_colour': item.product.colour,
           'quantity': item.quantity,
           'discount': item.discount,
           'discount_per_unit': item.discountPerUnit ? 1 : 0,
@@ -133,6 +134,7 @@ class InvoiceService {
           'product_price': item.product.price,
           'product_tax_rate': item.product.tax_rate,
           'product_hsn_code': item.product.hsncode,
+          'product_colour': item.product.colour,
           'quantity': item.quantity,
           'discount': item.discount,
           'discount_per_unit': item.discountPerUnit ? 1 : 0,

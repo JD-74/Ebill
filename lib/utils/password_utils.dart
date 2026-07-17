@@ -27,10 +27,10 @@ class PasswordUtils {
   }
 
   /// Verifies a password against a stored hash.
-  /// If [salt] is null, falls back to plain SHA-256 (legacy accounts).
+  /// If [salt] is null/empty, falls back to plain SHA-256 (legacy accounts).
   /// If [salt] is provided, uses HMAC-SHA256.
   static bool verify(String password, String storedHash, String? salt) {
-    if (salt == null) {
+    if (salt == null || salt.isEmpty) {
       return hash(password) == storedHash;
     }
     return hashWithSalt(password, salt) == storedHash;

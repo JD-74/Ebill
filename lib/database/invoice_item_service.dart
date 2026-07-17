@@ -1,4 +1,4 @@
-import 'package:invoiso/models/invoice_item.dart';
+import 'package:ebill/models/invoice_item.dart';
 import '../models/product.dart';
 import '../utils/app_logger.dart';
 import 'database_helper.dart';
@@ -18,6 +18,7 @@ class InvoiceItemService {
       'product_price': item.product.price,
       'product_tax_rate': item.product.tax_rate,
       'product_hsn_code': item.product.hsncode,
+      'product_colour': item.product.colour,
       'quantity': item.quantity,
       'discount': item.discount,
       'unit_price': item.unitPrice,
