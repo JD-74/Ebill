@@ -1,4 +1,4 @@
-name: Build and Release Invoiso
+name: Build and Release Ebill
 
 on:
   push:
@@ -59,23 +59,32 @@ jobs:
         env:
           CMAKE_GENERATOR: "Visual Studio 17 2022"
 
-      - name: Verify installer exists
+      - name: Rename installer to Ebill
         shell: bash
         run: |
-          count=$(find dist -name "invoiso-*-windows-setup.exe" | wc -l)
+          VERSION="${GITHUB_REF#refs/tags/}"
+          VERSION="${VERSION#test-v}"
+          VERSION="${VERSION#v}"
+          mkdir -p dist
+          # FastForge may emit invoiso-* or Ebill-Setup*; normalize to ebill-<ver>-windows-setup.exe
+          while IFS= read -r -d '' f; do
+            dir=$(dirname "$f")
+            mv "$f" "$dir/ebill-${VERSION}-windows-setup.exe"
+            echo "Renamed to $dir/ebill-${VERSION}-windows-setup.exe"
+          done < <(find dist -type f \( -name 'invoiso-*-windows-setup.exe' -o -name 'Ebill-Setup*.exe' -o -name 'EbillSetup*.exe' \) -print0)
+          count=$(find dist -name "ebill-*-windows-setup.exe" | wc -l)
           if [ "$count" -eq 0 ]; then
-            echo "ERROR: No installer found in dist/"
+            echo "ERROR: No Ebill Windows installer found in dist/"
             find dist -type f
             exit 1
           fi
-          echo "Found installer(s):"
-          find dist -name "invoiso-*-windows-setup.exe"
+          find dist -name "ebill-*-windows-setup.exe"
 
       - name: Upload Windows Installer
         uses: actions/upload-artifact@v4
         with:
-          name: Invoiso-Windows-Installer
-          path: dist/*/invoiso-*-windows-setup.exe
+          name: Ebill-Windows-Installer
+          path: dist/**/ebill-*-windows-setup.exe
 
   # ─────────────────────────────────────────────────────────────
   # Linux — build .deb package
@@ -497,7 +506,7 @@ jobs:
       - name: Download Windows artifact
         uses: actions/download-artifact@v4
         with:
-          name: Invoiso-Windows-Installer
+          name: Ebill-Windows-Installer
           path: release-assets/
         continue-on-error: true
 
@@ -544,7 +553,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
-          name: Invoiso ${{ github.ref_name }}
+          name: Ebill ${{ github.ref_name }}
           draft: false
           prerelease: false
           files: release-assets/**

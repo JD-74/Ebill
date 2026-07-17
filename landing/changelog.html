@@ -803,7 +803,7 @@
               </span>
             </div>
             <div style="padding: 12px 16px 4px;">
-              <a id="lv-link" href="https://github.com/Anooppandikashala/invoiso/releases/latest" target="_blank" rel="noopener noreferrer"
+              <a id="lv-link" href="https://github.com/JD-74/Ebill/releases/latest" target="_blank" rel="noopener noreferrer"
                 style="font-size:0.9rem; color:var(--primary); text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
                 <i class="fab fa-github" aria-hidden="true"></i>
                 View release on GitHub
@@ -1127,7 +1127,7 @@
 
     <script>
       // Fetch latest release from GitHub and populate the current version card
-      fetch('https://api.github.com/repos/Anooppandikashala/invoiso/releases/latest')
+      fetch('https://api.github.com/repos/JD-74/Ebill/releases/latest')
         .then(function (res) { if (!res.ok) throw new Error(); return res.json(); })
         .then(function (release) {
           document.getElementById('lv-tag').textContent = release.tag_name;

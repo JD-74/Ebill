@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:invoiso/constants.dart';
 import 'package:invoiso/providers/repositories.dart';
 import 'package:invoiso/screens/change_password_screen.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../providers/app_config_provider.dart';
 import 'dashboard_screen.dart';
@@ -68,7 +67,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         MaterialPageRoute(builder: (context) => DashboardScreen(user)),
       );
     } else if (!user.passwordChanged && !cfg.isCloud) {
-      // Force password change
+      // Force password change on first login
       if (!mounted) return;
       Navigator.pushReplacement(
         context,
@@ -136,6 +135,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ),
                   ),
                 ),
+                if (!cfg.isCloud) ...[
+                  AppSpacing.hMedium,
+                  Text(
+                    'Default login: username admin / password admin.\nYou will be prompted to set a new password after first login.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey[600],
+                      height: 1.4,
+                    ),
+                  ),
+                ],
                 AppSpacing.hXlarge,
                 SizedBox(
                   width: double.infinity,
@@ -159,21 +170,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   ),
                 ),
                 AppSpacing.hLarge,
-                MouseRegion(
-                  cursor: SystemMouseCursors.click,
-                  child: GestureDetector(
-                    onTap: () => launchUrl(Uri.parse(AppConfig.website),
-                        mode: LaunchMode.externalApplication),
-                    child: Text(
-                      AppConfig.website,
-                      style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey[500],
-                          decoration: TextDecoration.underline),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 4),
                 Text(
                   AppConfig.version,
                   style: TextStyle(fontSize: 12, color: Colors.grey[400]),

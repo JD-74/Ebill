@@ -12,5 +12,5 @@ SolidCompression=yes
 Source: "build\windows\x64\runner\Release\*"; DestDir: "{app}"; Flags: recursesubdirs
 
 [Icons]
-Name: "{group}\Ebill"; Filename: "{app}\invoiso.exe"
-Name: "{commondesktop}\Ebill"; Filename: "{app}\invoiso.exe"
+Name: "{group}\Ebill"; Filename: "{app}\ebill.exe"
+Name: "{commondesktop}\Ebill"; Filename: "{app}\ebill.exe"

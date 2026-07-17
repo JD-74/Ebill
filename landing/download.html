@@ -1650,6 +1650,16 @@
         </div>
 
         <div class="welcome-section">
+          <div class="welcome-section-icon"><i class="fas fa-key" aria-hidden="true"></i></div>
+          <div>
+            <p class="welcome-section-label">Offline login</p>
+            <div class="welcome-section-body">
+              Use <code>admin</code> / <code>admin</code> the first time. No internet account is required — your data stays on this PC.
+            </div>
+          </div>
+        </div>
+
+        <div class="welcome-section">
           <div class="welcome-section-icon"><i class="fas fa-envelope" aria-hidden="true"></i></div>
           <div>
             <p class="welcome-section-label">Need Help?</p>
@@ -1800,7 +1810,7 @@
       }
 
       // --- Fetch releases ---
-      fetch('https://api.github.com/repos/Anooppandikashala/invoiso/releases?per_page=100')
+      fetch('https://api.github.com/repos/JD-74/Ebill/releases?per_page=100')
         .then(function (res) {
           if (!res.ok) throw new Error('Network error');
           return res.json();
