@@ -1,0 +1,36 @@
+# Ebill
+
+> Ebill is a free, offline invoice and billing desktop application for Windows, Linux, and macOS. No subscription, no cloud, no account required.
+
+## About
+
+Ebill is built for freelancers, small businesses, shop owners, and consultants who need professional invoicing without internet dependency or recurring costs. All data is stored locally on the user's device using a SQLite database.
+
+## Key Features
+
+- 100% offline — no internet required at any point
+- Professional PDF invoices with one click (Classic, Modern, Minimal templates)
+- Customer and product management with search, sort, and filter
+- Payment tracking — record partial or full payments, track outstanding balances
+- PDF payment receipts for every recorded payment
+- GST-ready invoices with GSTIN, HSN codes, and configurable tax rates (India)
+- UPI payment QR code embedded in PDF invoices
+- Multi-currency support: INR, USD, EUR, GBP, JPY, AED, SGD, AUD, CAD
+- Invoice and quotation document types
+- Duplicate / clone any invoice with one click
+- Role-based access control (admin and standard user roles)
+- Data backup and restore
+- No subscription, no fees — free forever
+
+## Pages
+
+- [Home](https://invoiso.co.in/) — Overview and features
+- [Download](https://invoiso.co.in/download.html) — Latest release for Windows, Linux, and macOS
+- [Free Online Invoice Maker](https://invoiso.co.in/invoice-maker.html) — Browser-based PDF invoice generator, no signup
+- [Release Notes](https://invoiso.co.in/changelog.html) — Full version history
+- [Privacy](https://invoiso.co.in/privacy.html) — Privacy policy
+- [Terms](https://invoiso.co.in/terms.html) — Terms of use
+
+## Support
+
+- Email: anooppkrishnan96@gmail.com
