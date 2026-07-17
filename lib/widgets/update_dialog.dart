@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../services/update_service.dart';
 
 class UpdateDialog extends StatelessWidget {
   final UpdateInfo info;
 
   const UpdateDialog({super.key, required this.info});
+
+  static const _downloadUrl =
+      'https://github.com/Anooppandikashala/invoiso/releases/latest';
 
   static Future<void> show(BuildContext context, UpdateInfo info) async {
     await showDialog<void>(
@@ -42,7 +46,7 @@ class UpdateDialog extends StatelessWidget {
           _versionRow('Latest version', info.latestVersion, Colors.green.shade700),
           const SizedBox(height: 16),
           Text(
-            'A new version of Ebill is available. Download the latest installer when you are ready to update.',
+            'A new version of Ebill is available. Download the latest installer to update.',
             style: TextStyle(fontSize: 13, color: Colors.grey.shade700, height: 1.5),
           ),
           const SizedBox(height: 8),
@@ -56,13 +60,18 @@ class UpdateDialog extends StatelessWidget {
           },
           child: Text('Dismiss', style: TextStyle(color: Colors.grey.shade600)),
         ),
-        FilledButton(
+        FilledButton.icon(
           style: FilledButton.styleFrom(backgroundColor: primary),
+          icon: const Icon(Icons.download_rounded, size: 16),
+          label: const Text('Download'),
           onPressed: () async {
             await UpdateService.markNotified(info.latestVersion);
             if (context.mounted) Navigator.of(context).pop();
+            await launchUrl(
+              Uri.parse(_downloadUrl),
+              mode: LaunchMode.externalApplication,
+            );
           },
-          child: const Text('OK'),
         ),
       ],
     );

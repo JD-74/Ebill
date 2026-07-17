@@ -1504,10 +1504,10 @@
                 <strong><span class="live-dot" aria-hidden="true"></span> Latest releases</strong>
               </div>
               <div class="download-platforms">
-                <a href="#latest-downloads" class="download-platform-card" data-platform="windows" style="text-decoration:none;cursor:pointer;">
+                <a href="#latest-downloads" id="primary-windows-download" class="download-platform-card" data-platform="windows" style="text-decoration:none;cursor:pointer;">
                   <i class="fab fa-windows" aria-hidden="true"></i>
                   <strong>Windows</strong>
-                  <span>Installer</span>
+                  <span>Download installer</span>
                 </a>
                 <a href="#latest-downloads" class="download-platform-card" data-platform="linux-deb" style="text-decoration:none;cursor:pointer;">
                   <i class="fab fa-linux" aria-hidden="true"></i>
@@ -1520,6 +1520,10 @@
                   <span>DMG package</span>
                 </a>
               </div>
+              <a id="hero-download-btn" href="#latest-downloads" class="btn-primary font-semibold px-6 py-3 rounded-lg inline-flex items-center justify-center gap-2" style="width:100%;margin-top:14px;">
+                <i class="fas fa-download" aria-hidden="true"></i>
+                Download offline app
+              </a>
               <div id="total-dl-stat" style="display:none" class="total-dl-stat">
                 <i class="fas fa-download" aria-hidden="true"></i>
                 <span id="total-downloads" class="total-dl-number"></span>
@@ -1809,17 +1813,12 @@
         return count.toLocaleString() + ' ' + (count === 1 ? 'download' : 'downloads');
       }
 
-      // --- Fetch releases ---
-      fetch('https://api.github.com/repos/JD-74/Ebill/releases?per_page=100')
-        .then(function (res) {
-          if (!res.ok) throw new Error('Network error');
-          return res.json();
-        })
-        .then(function (releases) {
+      // --- Fetch releases (prefer JD-74/Ebill; fall back to releases that still have installers) ---
+      function loadReleases(releases) {
           var list = document.getElementById('releases-list');
           list.innerHTML = '';
 
-          if (!releases.length) {
+          if (!releases || !releases.length) {
             list.innerHTML = '<p class="text-center py-8" style="color:var(--text-muted)">No releases found.</p>';
             return;
           }
@@ -1859,6 +1858,19 @@
             else if (info.os === 'linux') linux.push(entry);
             else if (info.os === 'macos') macos.push(entry);
             else                          other.push(entry);
+          });
+
+          // Wire primary Windows download CTAs when an installer exists
+          var windowsUrl = windows.length ? windows[0].asset.browser_download_url : '';
+          ['primary-windows-download', 'hero-download-btn'].forEach(function (id) {
+            var el = document.getElementById(id);
+            if (!el || !windowsUrl) return;
+            el.href = windowsUrl;
+            el.classList.remove('is-disabled');
+            el.setAttribute('aria-disabled', 'false');
+            el.addEventListener('click', function () {
+              openWelcomeModal();
+            });
           });
 
           var downloadsHtml = '';
@@ -1901,6 +1913,34 @@
             '</div>';
 
           list.appendChild(latestCard);
+      }
+
+      function releasesHaveInstallers(releases) {
+        if (!releases || !releases.length) return false;
+        var assets = releases[0].assets || [];
+        return assets.some(function (a) {
+          var n = (a.name || '').toLowerCase();
+          return n.endsWith('.exe') || n.endsWith('.msi') || n.endsWith('.dmg') ||
+            n.endsWith('.deb') || n.endsWith('.appimage') || n.endsWith('.rpm');
+        });
+      }
+
+      function fetchReleasesJson(url) {
+        return fetch(url).then(function (res) {
+          if (!res.ok) throw new Error('Network error');
+          return res.json();
+        });
+      }
+
+      fetchReleasesJson('https://api.github.com/repos/JD-74/Ebill/releases?per_page=100')
+        .then(function (releases) {
+          if (releasesHaveInstallers(releases)) return releases;
+          return fetchReleasesJson('https://api.github.com/repos/Anooppandikashala/invoiso/releases?per_page=100');
+        })
+        .then(loadReleases)
+        .catch(function () {
+          return fetchReleasesJson('https://api.github.com/repos/Anooppandikashala/invoiso/releases?per_page=100')
+            .then(loadReleases);
         })
         .catch(function () {
           document.getElementById('releases-list').innerHTML =
