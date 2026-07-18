@@ -1700,7 +1700,14 @@
         if (e.key === 'Escape') closeWelcomeModal();
       });
       document.getElementById('releases-list').addEventListener('click', function (e) {
-        if (e.target.closest('.asset-btn')) openWelcomeModal();
+        var download = e.target.closest('.asset-btn');
+        if (!download) return;
+        e.preventDefault();
+        downloadAsEbill(
+          download.dataset.apiUrl,
+          download.dataset.downloadName,
+          download.dataset.platform
+        );
       });
 
       document.querySelectorAll('.download-platform-card[data-platform]').forEach(function (card) {
@@ -1783,15 +1790,44 @@
         }
       }
 
+      function ebillAssetName(filename) {
+        return filename
+          .replace(/invoiso/gi, 'ebill')
+          .replace(/^Ebill/, 'ebill');
+      }
+
+      async function downloadAsEbill(apiUrl, filename, platform) {
+        var outputName = ebillAssetName(filename);
+        trackDownload(outputName, platform);
+        openWelcomeModal();
+
+        try {
+          var response = await fetch(apiUrl, {
+            headers: { Accept: 'application/octet-stream' },
+          });
+          if (!response.ok) throw new Error('Download failed');
+
+          var blobUrl = URL.createObjectURL(await response.blob());
+          var link = document.createElement('a');
+          link.href = blobUrl;
+          link.download = outputName;
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+          setTimeout(function () { URL.revokeObjectURL(blobUrl); }, 1000);
+        } catch (error) {
+          window.alert('The Ebill download could not be started. Please try again.');
+        }
+      }
+
       function buildAssetRows(entries) {
         return entries.map(function (e) {
           var size = formatBytes(e.asset.size);
           var dl   = e.asset.download_count || 0;
           var meta = [size, dl ? dl.toLocaleString() + ' downloads' : ''].filter(Boolean).join(' · ');
-          var safeName = e.asset.name.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
-          var displayName = e.asset.name.replace(/Invoiso/gi, 'Ebill').replace(/invoiso/gi, 'ebill');
+          var displayName = ebillAssetName(e.asset.name);
           return (
-            '<a href="' + escHtml(e.asset.browser_download_url) + '" class="asset-btn" onclick="trackDownload(\'' + safeName + '\',\'' + e.info.os + '\')" aria-label="Download ' + escHtml(displayName) + '">' +
+            '<a href="' + escHtml(e.asset.browser_download_url) + '" class="asset-btn" download="' + escHtml(displayName) + '" data-api-url="' + escHtml(e.asset.url) + '" data-download-name="' + escHtml(displayName) + '" data-platform="' + escHtml(e.info.os) + '" aria-label="Download ' + escHtml(displayName) + '">' +
               '<span class="asset-icon"><i class="' + e.info.icon + '" aria-hidden="true"></i></span>' +
               '<span class="asset-info">' +
                 '<span class="asset-name">' + escHtml(displayName) + '</span>' +
@@ -1845,13 +1881,24 @@
 
           // ── Latest release: downloads only ──
           var latest = releases[0];
+          var bundledWindowsInstaller = {
+            name: 'ebill-4.3.0-windows-setup.exe',
+            browser_download_url: 'downloads/ebill-4.3.0-windows-setup.exe',
+            url: 'downloads/ebill-4.3.0-windows-setup.exe',
+            size: 17197992,
+            download_count: 0,
+          };
           var latestDate = new Date(latest.published_at).toLocaleDateString('en-US', {
             year: 'numeric', month: 'long', day: 'numeric',
           });
           var releaseTitle = (latest.name || latest.tag_name || '').replace(/Invoiso/gi, 'Ebill').replace(/invoiso/gi, 'Ebill');
 
           var windows = [], linux = [], macos = [], other = [];
-          (latest.assets || []).forEach(function (asset) {
+          var releaseAssets = (latest.assets || []).filter(function (asset) {
+            return classifyAsset(asset.name).os !== 'windows';
+          });
+          releaseAssets.unshift(bundledWindowsInstaller);
+          releaseAssets.forEach(function (asset) {
             var info  = classifyAsset(asset.name);
             var entry = { asset: asset, info: info };
             if (info.os === 'windows')    windows.push(entry);
@@ -1862,14 +1909,21 @@
 
           // Wire primary Windows download CTAs when an installer exists
           var windowsUrl = windows.length ? windows[0].asset.browser_download_url : '';
+          var windowsApiUrl = windows.length ? windows[0].asset.url : '';
+          var windowsName = windows.length ? ebillAssetName(windows[0].asset.name) : '';
           ['primary-windows-download', 'hero-download-btn'].forEach(function (id) {
             var el = document.getElementById(id);
             if (!el || !windowsUrl) return;
             el.href = windowsUrl;
+            el.setAttribute('download', windowsName);
+            el.dataset.apiUrl = windowsApiUrl;
+            el.dataset.downloadName = windowsName;
+            el.dataset.platform = 'windows';
             el.classList.remove('is-disabled');
             el.setAttribute('aria-disabled', 'false');
-            el.addEventListener('click', function () {
-              openWelcomeModal();
+            el.addEventListener('click', function (event) {
+              event.preventDefault();
+              downloadAsEbill(windowsApiUrl, windowsName, 'windows');
             });
           });
 

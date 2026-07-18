@@ -7,7 +7,7 @@ set -x
 # -------------------------
 APP_NAME="ebill"
 APP_VERSION="1.0.0"
-MAINTAINER="Anoop P <anooppkrishnan96@gmail.com>"
+MAINTAINER="jagadih_V.J <anooppkrishnan96@gmail.com>"
 BUILD_NUMBER_FILE=".build_number"
 DEFAULT_BUILD_DIR="build/linux/x64/release/bundle"
 

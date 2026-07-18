@@ -66,7 +66,7 @@ class AppConfig
   static const kIsCloud = false;
   static const name = "Ebill";
   static const version = "v4.3.0";
-  static const developer = "ANOOP P";
+  static const developer = "jagadih_V.J";
   static const supportEmail = "anooppkrishnan96@gmail.com";
   static const website = "";
   static const description = "Ebill is a modern invoice and quotation management app for freelancers and small businesses.";

@@ -1,10 +1,10 @@
 [Setup]
 AppName=Ebill
-AppVersion=1.0.0
+AppVersion=4.3.0
 DefaultDirName={pf}\Ebill
 DefaultGroupName=Ebill
-OutputDir=Output
-OutputBaseFilename=EbillSetup
+OutputDir=landing\downloads
+OutputBaseFilename=ebill-4.3.0-windows-setup
 Compression=lzma
 SolidCompression=yes
 
